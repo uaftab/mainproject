@@ -1,4 +1,4 @@
 all:
-	g++ main.cpp functions.h functions.cpp  -o mainprog
+	g++ source.cpp subfunctions.h subfunctions.cpp  -o subproject-prog
 clean:
-	rm mainprog
+	rm subproject-prog

@@ -4,5 +4,5 @@
 using namespace std;
 
 
-void alert_box();
+void alert_box_sub();
 
