@@ -10,8 +10,8 @@ dir='.git'
 
 if [ ! -d "$dir" -a ! -h "$dir" ]
 then
-echo "|-.git dir could not be found - Are you in the top level  dir"
-echo " |-If not then you should be"
+echo "|-.git dir could not be found - Are you in the top level dir"
+echo " |-If not then you should be - Doesn't look like it though - check with  < ls -all > "
 
 else
 #presumably in the top level git dir
@@ -25,7 +25,7 @@ commitstring='nothing to commit, working directory clean'
 #check if git status contains the string 
 
 if echo "$gitstatus" | grep -q "$commitstring"; then
-	echo "|-It looks like everything is uptodate before subtree import - Continuing";
+	echo "|-It looks like everything is uptodate before subtree import - Continuing Onwards";
 else
 	echo "|-It looks like there are some commits pending"
 	echo "|-It is advisable to commit them"
@@ -41,33 +41,41 @@ fi
 
 
 echo "|- Please enter the dir where you would like to make the repo as a subtree"
-echo " |- Path to dir  full/reletive - if dir does not exist it will create it"
+echo " |- Path to dir  full/relative - if dir does not exist it will be created"
 echo " |-No symlinks"
 
 pathdir="$1"
 
 read pathdir
 
-#directory path wasnt valid
+#directory path didnt exist lets make one 
 if [ ! -d "$pathdir" -a ! -h "$pathdir" ]
 then
-echo "|- Making Dir@:" $pathdir
+echo "|- Making Dir@: " $pathdir
 mkdir $pathdir
 
 fi
-
+echo -e "\n"
 #ok so the dir should exist now do the git thing
-echo "|-Name of repo: - example: tries" 
+echo "|-Remote Name of repo: - example: triesremote" 
 read reponame
-echo "|-Please enter the path/weburl for the git to be used as a subtree"
+echo "|-Please enter the remote path/weburl for the git to be used as a subtree"
 read remoteurl
 
+
+# Actual Subtree creation commands
+#-----------------------------------------------------------
 git remote add -f $reponame $remoteurl
 git merge -s ours --no-commit $reponame/master
 git read-tree --prefix=$pathdir/ -u $reponame/master
 git commit -m "Added +$reponame+as a subtree"
+# -----------------------------------------------------------
 
-echo "\n\n\n"
+
+# -e flag for interpreting backslash escape characters
+# may do something funny on some bash terms 
+# consider switching to printf for future.
+echo -e "\n\n\n"
 echo "***********************"
 echo "All done"
 echo "For push pull to subtree use the following remotes as from the top level dir"
